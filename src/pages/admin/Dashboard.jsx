@@ -17,20 +17,20 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1 className="fw-bold mb-4" style={{ color: 'var(--text-primary)', fontSize: 'var(--fs-h2)' }}>Dashboard</h1>
-      <div className="row g-4 mb-5">
-        <div className="col-md-4"><StatsCard title="Products" value={stats.totalProducts} icon="fa-box" /></div>
-        <div className="col-md-4"><StatsCard title="Orders" value={stats.totalOrders} icon="fa-shopping-cart" /></div>
-        <div className="col-md-4"><StatsCard title="Revenue" value={`$${stats.totalSales.toFixed(2)}`} icon="fa-dollar-sign" /></div>
+      <h1 className="fw-bold mb-4 admin-heading" style={{ color: 'var(--text-primary)' }}>Dashboard</h1>
+      <div className="row g-3 g-md-4 mb-5">
+        <div className="col-12 col-sm-6 col-md-4"><StatsCard title="Products" value={stats.totalProducts} icon="fa-box" /></div>
+        <div className="col-12 col-sm-6 col-md-4"><StatsCard title="Orders" value={stats.totalOrders} icon="fa-shopping-cart" /></div>
+        <div className="col-12 col-sm-6 col-md-4"><StatsCard title="Revenue" value={`$${stats.totalSales.toFixed(2)}`} icon="fa-dollar-sign" /></div>
       </div>
 
       {newOrders.length > 0 && (
-        <div className="admin-card p-4 mb-4">
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h5 className="fw-bold mb-0" style={{ color: 'var(--text-primary)' }}>New Orders</h5>
-            <span className="ds-badge ds-badge--secondary">Latest</span>
+        <div className="admin-card p-4 p-md-5 mb-4">
+          <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 className="fw-bold mb-0 admin-heading" style={{ color: 'var(--text-primary)' }}>New Orders</h5>
+            <span className="ds-badge ds-badge--secondary flex-shrink-0">Latest</span>
           </div>
-          <div className="table-responsive">
+          <div className="admin-table-wrap">
             <table className="ds-table">
               <thead>
                 <tr>
@@ -49,9 +49,11 @@ export default function Dashboard() {
                     <td>{o.customer_name}</td>
                     <td>{o.phone}</td>
                     <td>${Number(o.total).toFixed(2)}</td>
-                    <td style={{ fontSize: '0.85rem' }}>{new Date(o.created_at).toLocaleDateString()}</td>
-                    <td className="text-end">
-                      <Link to={`/admin/orders/${o.id}`} className="btn-pink btn-pink--sm">View</Link>
+                    <td style={{ fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{new Date(o.created_at).toLocaleDateString()}</td>
+                    <td>
+                      <div className="admin-table-actions justify-content-end">
+                        <Link to={`/admin/orders/${o.id}`} className="btn-pink btn-pink--sm">View</Link>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -64,15 +66,15 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="admin-card p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="fw-bold mb-0" style={{ color: 'var(--text-primary)' }}>Low Stock Alerts</h5>
-          {lowStock.length > 0 && <span className="ds-badge ds-badge--danger">{stats.lowStockCount}</span>}
+      <div className="admin-card p-4 p-md-5">
+        <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <h5 className="fw-bold mb-0 admin-heading" style={{ color: 'var(--text-primary)' }}>Low Stock Alerts</h5>
+          {lowStock.length > 0 && <span className="ds-badge ds-badge--danger flex-shrink-0">{stats.lowStockCount}</span>}
         </div>
           {lowStock.length === 0 ? (
           <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--fs-small)' }}>All products are well-stocked.</p>
         ) : (
-          <div className="table-responsive">
+          <div className="admin-table-wrap">
             <table className="ds-table">
               <thead><tr><th>Product</th><th>Color</th><th>Stock</th></tr></thead>
               <tbody>{lowStock.map((v) => <tr key={v.id}><td>{v.products?.name || '—'}</td><td>{v.color || '—'}</td><td className="fw-semibold" style={{ color: 'var(--error-text)' }}>{v.stock}</td></tr>)}</tbody>

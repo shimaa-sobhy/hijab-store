@@ -5,11 +5,14 @@ import { formatPrice } from '../../utils/formatPrice.js';
 import { fetchMyOrders } from '../../services/ordersService.js';
 import { ORDER_CONFIG } from '../../utils/constants.js';
 import Loader from '../../components/common/Loader.jsx';
+import useScrollReveal from '../../hooks/useScrollReveal.js';
 
 export default function Orders() {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [headerRef, headerVis] = useScrollReveal();
+  const [tableRef, tableVis] = useScrollReveal({ threshold: 0.05 });
 
   useEffect(() => {
     if (!user) { setLoading(false); return; }
@@ -24,7 +27,7 @@ export default function Orders() {
 
   return (
     <div className="ds-container section-premium" style={{ paddingTop: 'var(--space-6)' }}>
-      <div className="text-center mb-5">
+      <div ref={headerRef} className={`text-center mb-5 reveal ${headerVis ? 'is-visible' : ''}`}>
         <p className="ds-text-xs" style={{ color: 'var(--pink)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
           — My Orders —
         </p>
@@ -32,7 +35,7 @@ export default function Orders() {
         <div className="pink-divider pink-divider--center" style={{ marginTop: '1rem' }} />
       </div>
 
-      <div className="admin-card p-4 p-md-5">
+      <div ref={tableRef} className={`admin-card p-4 p-md-5 reveal ${tableVis ? 'is-visible' : ''}`}>
         {orders.length === 0 ? (
           <div className="text-center py-5" style={{ color: 'var(--text-secondary)' }}>
             <i className="fas fa-box-open" style={{ fontSize: '3rem', color: 'var(--pink)', marginBottom: '1.5rem', display: 'block' }}></i>
@@ -43,22 +46,22 @@ export default function Orders() {
           </div>
         ) : (
           <div className="table-responsive">
-            <table className="ds-table" style={{ marginBottom: 0 }}>
+            <table className="ds-table stagger" style={{ marginBottom: 0 }}>
               <thead>
                 <tr>
                   <th>Order</th>
-                  <th>Status</th>
                   <th>Total</th>
                   <th>Date</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.map((o) => (
                   <tr key={o.id}>
                     <td className="fw-semibold">#{o.order_number?.slice(0, 8)}</td>
-                    <td><span className={`ds-badge ${ORDER_CONFIG.badgeMap[o.status] || 'ds-badge--secondary'}`}>{ORDER_CONFIG.displayLabels[o.status] || o.status}</span></td>
                     <td>{formatPrice(o.total)}</td>
                     <td style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{new Date(o.created_at).toLocaleDateString()}</td>
+                    <td><span className={`ds-badge ${ORDER_CONFIG.badgeMap[o.status] || 'ds-badge--secondary'}`}>{ORDER_CONFIG.displayLabels[o.status] || o.status}</span></td>
                   </tr>
                 ))}
               </tbody>

@@ -24,7 +24,7 @@ export default function Cart() {
 
       {items.length === 0 ? (
         <div className="admin-card p-5 text-center" style={{ color: 'var(--text-secondary)' }}>
-          <i className="fas fa-shopping-bag" style={{ fontSize: '3rem', color: 'var(--pink)', marginBottom: '1.5rem', display: 'block' }}></i>
+          <i className="fas fa-shopping-bag ds-empty-cart-icon" style={{ fontSize: '3rem', color: 'var(--pink)', marginBottom: '1.5rem', display: 'block' }}></i>
           <p>Your cart is empty</p>
           <Link to="/shop" className="btn-pink mt-3" style={{ display: 'inline-block', padding: '12px 36px' }}>
             Start Shopping
@@ -50,15 +50,15 @@ export default function Cart() {
                   <p className="fw-bold mb-2" style={{ color: 'var(--pink)', fontSize: 'var(--fs-small)' }}>{formatPrice(item.price)}</p>
                   <div className="d-flex align-items-center gap-3">
                     <div className="d-flex align-items-center border rounded-pill" style={{ borderColor: 'var(--border-subtle)' }}>
-                      <button className="btn btn-sm border-0 px-2" onClick={() => updateQuantity(item.variant_id, Math.max(1, item.quantity - 1))} style={{ color: 'var(--text-secondary)' }}>
+                      <button className="btn border-0 d-flex align-items-center justify-content-center" onClick={() => updateQuantity(item.variant_id, Math.max(1, item.quantity - 1))} style={{ color: 'var(--text-secondary)', width: '44px', height: '44px' }}>
                         <i className="fas fa-minus" style={{ fontSize: '0.7rem' }}></i>
                       </button>
-                      <span className="px-2 fw-medium" style={{ color: 'var(--text-primary)', fontSize: 'var(--fs-small)' }}>{item.quantity}</span>
-                      <button className="btn btn-sm border-0 px-2" onClick={() => updateQuantity(item.variant_id, Math.min(item.stock || 99, item.quantity + 1))} style={{ color: 'var(--text-secondary)' }}>
+                      <span className="px-2 fw-medium" style={{ color: 'var(--text-primary)', fontSize: 'var(--fs-small)', minWidth: '24px', textAlign: 'center' }}>{item.quantity}</span>
+                      <button className="btn border-0 d-flex align-items-center justify-content-center" onClick={() => updateQuantity(item.variant_id, Math.min(item.stock || 99, item.quantity + 1))} style={{ color: 'var(--text-secondary)', width: '44px', height: '44px' }}>
                         <i className="fas fa-plus" style={{ fontSize: '0.7rem' }}></i>
                       </button>
                     </div>
-                    <button className="btn btn-sm border-0" onClick={() => removeItem(item.variant_id)} style={{ color: 'var(--error-text)' }}>
+                    <button className="btn border-0 d-flex align-items-center justify-content-center" onClick={() => removeItem(item.variant_id)} style={{ color: 'var(--error-text)', width: '44px', height: '44px' }}>
                       <i className="fas fa-trash"></i>
                     </button>
                   </div>

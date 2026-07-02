@@ -11,7 +11,7 @@ import {
   clearServerCart,
   mergeLocalCartToServer,
 } from '../services/cartService.js';
-import { toast } from 'react-toastify';
+import { toast } from '../utils/toast.jsx';
 
 export const CartContext = createContext(null);
 
@@ -77,7 +77,7 @@ export function CartProvider({ children }) {
         setItems(updated);
         saveLocalCart(updated);
       }
-      toast.success('Product added to cart');
+      toast.success('Product added to cart', 'Added to Cart');
     } catch (err) {
       toast.error(err.message || 'Failed to add to cart');
     }
@@ -110,7 +110,7 @@ export function CartProvider({ children }) {
         setItems(updated);
         saveLocalCart(updated);
       }
-      toast.info('Item removed');
+      toast.info('Item removed', 'Removed');
     } catch (err) {
       toast.error(err.message || 'Failed to remove');
     }

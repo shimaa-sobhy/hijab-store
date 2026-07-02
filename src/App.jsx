@@ -10,16 +10,19 @@ export default function App() {
       <CartProvider>
         <AppRoutes />
         <ToastContainer
-          position="top-center"
-          autoClose={2500}
+          position="top-right"
           hideProgressBar={false}
           newestOnTop
           closeOnClick
           pauseOnFocusLoss={false}
-          draggable
+          pauseOnHover
+          draggable={false}
           theme="light"
-          progressStyle={{ background: 'var(--pink)' }}
           toastClassName="ds-toast"
+          bodyClassName="ds-toast__body"
+          progressClassName="ds-toast__progress"
+          closeButton={false}
+          icon={false}
         />
       </CartProvider>
     </AuthProvider>

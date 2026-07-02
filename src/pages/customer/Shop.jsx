@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import ProductCard from '../../components/product/ProductCard.jsx';
-import Loader from '../../components/common/Loader.jsx';
+import SkeletonCard from '../../components/common/SkeletonCard.jsx';
 import ErrorMessage from '../../components/common/ErrorMessage.jsx';
 import { fetchAllProducts } from '../../services/productsService.js';
+import useScrollReveal from '../../hooks/useScrollReveal.js';
 
 export default function Shop() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
+
+  const [headerRef, headerVis] = useScrollReveal();
+  const [gridRef, gridVis] = useScrollReveal({ threshold: 0.05 });
 
   const load = () => {
     setLoading(true); setError(null);
@@ -29,7 +33,7 @@ export default function Shop() {
 
   return (
     <div className="ds-container section-premium products-section">
-      <div className="text-center mb-5">
+      <div ref={headerRef} className={`text-center mb-5 reveal ${headerVis ? 'is-visible' : ''}`}>
         <p className="ds-text-xs" style={{ color: 'var(--pink)', fontWeight: 600, letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
           — Our Collection —
         </p>
@@ -48,11 +52,11 @@ export default function Shop() {
         />
       </div>
 
-      {loading && <Loader />}
+      {loading && <SkeletonCard count={8} />}
       {error && <ErrorMessage message={error} onRetry={load} />}
 
       {!loading && !error && (
-        <div className="row g-4 mx-0">
+        <div ref={gridRef} className={`row g-4 mx-0 stagger ${gridVis ? 'is-visible' : ''}`}>
           {filtered.map((p) => (
             <div className="col-6 col-md-4 col-lg-3" key={p.id}>
               <ProductCard product={p} />

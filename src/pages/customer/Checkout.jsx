@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/useAuth.js';
 import { formatPrice } from '../../utils/formatPrice.js';
 import { isValidEgyptianPhone, EGYPTIAN_GOVERNORATES } from '../../utils/validators.js';
 import { placeOrder } from '../../services/ordersService.js';
-import { toast } from 'react-toastify';
+import { toast } from '../../utils/toast.jsx';
 
 export default function Checkout() {
   const { items, totalPrice, clearCart } = useCart();
@@ -16,11 +16,15 @@ export default function Checkout() {
   const [form, setForm] = useState({ customer_name: '', phone: '', address: '', city: '', notes: '' });
 
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  const handlePhoneChange = (e) => {
+    const cleaned = e.target.value.replace(/\D/g, '').slice(0, 11);
+    setForm((p) => ({ ...p, phone: cleaned }));
+  };
 
   const placeOrderAction = async () => {
-    if (items.length === 0) { toast.error('Your cart is empty'); return; }
+    if (items.length === 0) { toast.error('Your cart is empty', 'Empty Cart'); return; }
     if (!isValidEgyptianPhone(form.phone)) {
-      toast.error('Please enter a valid Egyptian phone number (11 digits starting with 01)');
+      toast.error('Please enter a valid Egyptian phone number (11 digits starting with 01)', 'Invalid Phone');
       return;
     }
     setSubmitting(true);
@@ -40,7 +44,7 @@ export default function Checkout() {
         items: orderItems,
       });
       await clearCart();
-      toast.success('Order placed successfully!');
+      toast.success('Order placed successfully!', 'Order Placed');
       navigate(`/order-success/${orderNumber}`);
     } catch (err) {
       toast.error(err.message || 'Failed to place order');
@@ -136,9 +140,9 @@ export default function Checkout() {
                         Phone Number
                       </label>
                       <input
-                        type="tel" name="phone" className="form-control"
-                        value={form.phone} onChange={handleChange}
-                        required placeholder="0100 000 0000" maxLength={11}
+                        type="tel" inputMode="numeric" name="phone" className="form-control"
+                        value={form.phone} onChange={handlePhoneChange}
+                        required placeholder="0100 000 0000"
                         style={{ padding: '13px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', fontSize: 'var(--fs-small)' }}
                       />
                     </div>
@@ -188,7 +192,7 @@ export default function Checkout() {
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                     flexWrap: 'wrap', gap: 'var(--space-3)',
                   }}>
-                    <Link to="/cart" className="btn-pink btn-pink--outline" style={{ padding: '12px 28px', fontSize: 'var(--fs-small)' }}>
+                    <Link to="/cart" className="btn-pink btn-pink--outline" style={{ padding: '12px 28px', fontSize: 'var(--fs-small)', minHeight: '44px', display: 'inline-flex', alignItems: 'center' }}>
                       <i className="fas fa-arrow-left" style={{ fontSize: '0.75rem' }}></i> Back to Cart
                     </Link>
                     <button type="submit" style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0 }}>Submit</button>

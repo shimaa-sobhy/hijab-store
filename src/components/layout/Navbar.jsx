@@ -7,6 +7,7 @@ import './layout.css';
 const navLinks = [
   { to: '/', label: 'Home', end: true },
   { to: '/shop', label: 'Shop' },
+  { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },
 ];
 
@@ -96,19 +97,20 @@ export default function Navbar() {
       </div>
 
       <div className={`ds-nav__mobile ${menuOpen ? 'is-open' : ''}`}>
+        <button className="ds-nav__mobile-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">
+          <i className="fas fa-times" aria-hidden="true"></i>
+        </button>
         {navLinks.map((l) => (
           <NavLink key={l.to} to={l.to} end={l.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => `ds-nav__mobile-link ${isActive ? 'is-active' : ''}`}>
             {l.label}
           </NavLink>
         ))}
-        {user ? (
+        {user && (
           <>
             <Link to="/account" onClick={() => setMenuOpen(false)} className="ds-nav__mobile-link">My Account</Link>
             <Link to="/account/orders" onClick={() => setMenuOpen(false)} className="ds-nav__mobile-link">My Orders</Link>
             <button className="ds-nav__mobile-link" onClick={handleLogout}>Sign Out</button>
           </>
-        ) : (
-          <Link to="/login" onClick={() => setMenuOpen(false)} className="ds-nav__mobile-link">Sign In</Link>
         )}
       </div>
     </header>

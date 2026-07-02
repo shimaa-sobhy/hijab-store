@@ -5,7 +5,7 @@ import Loader from '../../components/common/Loader.jsx';
 import ErrorMessage from '../../components/common/ErrorMessage.jsx';
 import { formatPrice } from '../../utils/formatPrice.js';
 import { ORDER_CONFIG } from '../../utils/constants.js';
-import { toast } from 'react-toastify';
+import { toast } from '../../utils/toast.jsx';
 
 export default function OrderDetails() {
   const { id } = useParams();
@@ -26,7 +26,7 @@ export default function OrderDetails() {
     try {
       await updateOrderStatus(order.id, newStatus);
       setOrder((prev) => ({ ...prev, status: newStatus }));
-      toast.success(`Order moved to ${ORDER_CONFIG.displayLabels[newStatus]}`);
+      toast.success(`Order moved to ${ORDER_CONFIG.displayLabels[newStatus]}`, 'Status Updated');
     } catch (err) { toast.error(err.message); }
     finally { setUpdating(false); }
   };
@@ -44,7 +44,8 @@ export default function OrderDetails() {
     const isCancelled = order.status === 'cancelled';
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0', padding: '1.5rem 0', position: 'relative' }}>
+      <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0', padding: '1.5rem 0', position: 'relative', minWidth: steps.length * 110 + 'px' }}>
         {steps.map((step, i) => {
           const isCompleted = !isCancelled && stepIdx !== undefined && i < stepIdx;
           const isCurrent = !isCancelled && stepIdx !== undefined && i === stepIdx;
@@ -110,34 +111,36 @@ export default function OrderDetails() {
             </div>
           </>
         )}
+        </div>
       </div>
     );
   };
 
   return (
-    <div>
-      <Link to="/admin/orders" className="btn-pink btn-pink--outline mb-4" style={{ display: 'inline-block' }}>&larr; Back to Orders</Link>
+    <div className="admin-content-bottom">
+      <Link to="/admin/orders" className="btn-pink btn-pink--outline mb-4" style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px' }}>&larr; Back to Orders</Link>
 
-      <div className="d-flex justify-content-between align-items-start mb-4">
-        <h1 className="fw-bold mb-0" style={{ color: 'var(--text-primary)', fontSize: 'var(--fs-h2)' }}>
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4 gap-3">
+        <h1 className="fw-bold mb-0 admin-heading" style={{ color: 'var(--text-primary)' }}>
           Order #{order.order_number?.slice(0, 8) || order.id?.slice(0, 8)}
         </h1>
-        <span className={`ds-badge ${ORDER_CONFIG.badgeMap[order.status] || ''}`} style={{ fontSize: '0.85rem', padding: '6px 16px' }}>
+        <span className={`ds-badge ${ORDER_CONFIG.badgeMap[order.status] || ''}`} style={{ fontSize: '0.85rem', padding: '6px 16px', flexShrink: 0 }}>
           {ORDER_CONFIG.displayLabels[order.status] || order.status}
         </span>
       </div>
 
-      <div className="admin-card p-4 mb-4">
+      <div className="admin-card p-4 p-md-5 mb-4">
         <h6 className="fw-bold mb-3" style={{ color: 'var(--text-primary)' }}>Order Progress</h6>
         {renderProgress()}
         {!isTerminal && (
-          <div className="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+          <div className="d-flex gap-2 justify-content-center mt-3 flex-wrap admin-stack-sm">
             {Object.entries(allowedTransitions).map(([nextStatus, actionLabel]) => (
               <button
                 key={nextStatus}
                 className={`btn-pink btn-pink--sm ${nextStatus === 'cancelled' ? 'btn-pink--outline' : ''}`}
                 disabled={updating}
                 onClick={() => handleStatusChange(nextStatus)}
+                style={{ minHeight: '44px' }}
               >
                 {updating ? 'Updating...' : actionLabel}
               </button>
@@ -146,44 +149,44 @@ export default function OrderDetails() {
         )}
       </div>
 
-      <div className="row g-4 mb-4">
+      <div className="row g-3 g-md-4 mb-4">
         <div className="col-md-6">
-          <div className="admin-card p-4">
+          <div className="admin-card p-4 p-md-5 h-100">
             <h6 className="fw-bold mb-3" style={{ color: 'var(--text-primary)' }}>Customer Details</h6>
             <table className="ds-table">
               <tbody>
-                <tr><td className="fw-semibold" style={{ width: '120px' }}>Name</td><td>{order.customer_name}</td></tr>
-                <tr><td className="fw-semibold">Phone</td><td>{order.phone}</td></tr>
-                <tr><td className="fw-semibold">Address</td><td>{order.address}</td></tr>
-                <tr><td className="fw-semibold">City</td><td>{order.city || '—'}</td></tr>
-                {order.notes && <tr><td className="fw-semibold">Notes</td><td>{order.notes}</td></tr>}
-                <tr><td className="fw-semibold">Date</td><td>{new Date(order.created_at).toLocaleDateString()}</td></tr>
+                <tr><td className="fw-semibold" style={{ width: '100px', paddingRight: '12px' }}>Name</td><td>{order.customer_name}</td></tr>
+                <tr><td className="fw-semibold" style={{ width: '100px', paddingRight: '12px' }}>Phone</td><td>{order.phone}</td></tr>
+                <tr><td className="fw-semibold" style={{ width: '100px', paddingRight: '12px' }}>Address</td><td style={{ wordBreak: 'break-word' }}>{order.address}</td></tr>
+                <tr><td className="fw-semibold" style={{ width: '100px', paddingRight: '12px' }}>City</td><td>{order.city || '—'}</td></tr>
+                {order.notes && <tr><td className="fw-semibold" style={{ width: '100px', paddingRight: '12px' }}>Notes</td><td style={{ wordBreak: 'break-word' }}>{order.notes}</td></tr>}
+                <tr><td className="fw-semibold" style={{ width: '100px', paddingRight: '12px' }}>Date</td><td>{new Date(order.created_at).toLocaleDateString()}</td></tr>
               </tbody>
             </table>
           </div>
         </div>
         <div className="col-md-6">
-          <div className="admin-card p-4">
+          <div className="admin-card p-4 p-md-5 h-100">
             <h6 className="fw-bold mb-3" style={{ color: 'var(--text-primary)' }}>Order Summary</h6>
             <table className="ds-table">
               <tbody>
-                <tr><td className="fw-semibold" style={{ width: '120px' }}>Items</td><td>{(order.order_items || []).length}</td></tr>
-                <tr><td className="fw-semibold">Total</td><td style={{ color: 'var(--pink)', fontWeight: 700, fontSize: 'var(--fs-h5)' }}>{formatPrice(order.total)}</td></tr>
+                <tr><td className="fw-semibold" style={{ width: '100px', paddingRight: '12px' }}>Items</td><td>{(order.order_items || []).length}</td></tr>
+                <tr><td className="fw-semibold" style={{ width: '100px', paddingRight: '12px' }}>Total</td><td style={{ color: 'var(--pink)', fontWeight: 700, fontSize: 'var(--fs-h5)' }}>{formatPrice(order.total)}</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <div className="admin-card p-4">
+      <div className="admin-card p-4 p-md-5">
         <h6 className="fw-bold mb-3" style={{ color: 'var(--text-primary)' }}>Order Items</h6>
-        <div className="table-responsive">
+        <div className="admin-table-wrap">
           <table className="ds-table">
             <thead><tr><th>Product</th><th>Color</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
             <tbody>
               {(order.order_items || []).map((item, i) => (
                 <tr key={i}>
-                  <td>{item.product_name || item.name}</td>
+                  <td style={{ wordBreak: 'break-word' }}>{item.product_name || item.name}</td>
                   <td>{item.color || '—'}</td>
                   <td>{item.quantity}</td>
                   <td>{formatPrice(Number(item.price_at_order || item.price))}</td>

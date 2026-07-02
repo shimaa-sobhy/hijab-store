@@ -48,34 +48,39 @@ export default function OrdersList() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="fw-bold mb-0" style={{ color: 'var(--text-primary)', fontSize: 'var(--fs-h2)' }}>Orders</h1>
+        <h1 className="fw-bold mb-0 admin-heading" style={{ color: 'var(--text-primary)' }}>Orders</h1>
       </div>
 
       <div className="d-flex gap-3 mb-4 flex-wrap align-items-center">
-        <input type="text" className="form-control ds-input" style={{ maxWidth: '250px' }} placeholder="Search orders..." value={search} onChange={(e) => setSearch(e.target.value)} />
+        <input type="text" className="form-control ds-input admin-full-sm" style={{ maxWidth: '280px' }} placeholder="Search by name or order #..." value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
 
-      <div className="d-flex gap-1 mb-4 flex-wrap" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            style={{
-              padding: '10px 20px',
-              border: 'none',
-              background: 'none',
-              cursor: 'pointer',
-              fontSize: 'var(--fs-small)',
-              fontWeight: activeTab === tab.key ? 600 : 400,
-              color: activeTab === tab.key ? 'var(--pink)' : 'var(--text-secondary)',
-              borderBottom: activeTab === tab.key ? '2px solid var(--pink)' : '2px solid transparent',
-              marginBottom: '-1px',
-              transition: 'color 0.2s, border-color 0.2s',
-            }}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="mb-4" style={{ borderBottom: '1px solid var(--border-subtle)', overflowX: 'auto', overflowY: 'hidden', WebkitOverflowScrolling: 'touch' }}>
+        <div className="d-flex gap-1" style={{ minWidth: '480px' }}>
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              style={{
+                padding: '12px 20px',
+                border: 'none',
+                background: 'none',
+                cursor: 'pointer',
+                fontSize: 'var(--fs-small)',
+                fontWeight: activeTab === tab.key ? 600 : 400,
+                color: activeTab === tab.key ? 'var(--pink)' : 'var(--text-secondary)',
+                borderBottom: activeTab === tab.key ? '2px solid var(--pink)' : '2px solid transparent',
+                marginBottom: '-1px',
+                whiteSpace: 'nowrap',
+                transition: 'color 0.2s, border-color 0.2s',
+                minHeight: '44px',
+                WebkitTapHighlightColor: 'transparent',
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {filtered.length === 0 ? (

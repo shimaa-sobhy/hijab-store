@@ -8,35 +8,39 @@ export default function OrdersTable({ orders }) {
   }
 
   return (
-    <div className="table-responsive">
-      <table className="ds-table">
-        <thead>
-          <tr>
-            <th>Order #</th>
-            <th>Customer</th>
-            <th>City</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((o) => (
-            <tr key={o.id}>
-              <td className="fw-semibold">#{o.order_number?.slice(0, 8) || o.id?.slice(0, 8)}</td>
-              <td>{o.customer_name}</td>
-              <td>{o.city || '—'}</td>
-              <td>${Number(o.total).toFixed(2)}</td>
-              <td><span className={`ds-badge ${ORDER_CONFIG.badgeMap[o.status] || ''}`}>{ORDER_CONFIG.displayLabels[o.status] || o.status}</span></td>
-              <td style={{ fontSize: '0.85rem' }}>{new Date(o.created_at).toLocaleDateString()}</td>
-              <td className="text-end">
-                <Link to={`/admin/orders/${o.id}`} className="btn-pink btn-pink--sm">View</Link>
-              </td>
+    <div className="admin-card p-0">
+      <div className="admin-table-wrap">
+        <table className="ds-table">
+          <thead>
+            <tr>
+              <th>Order #</th>
+              <th>Customer</th>
+              <th>City</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {orders.map((o) => (
+              <tr key={o.id}>
+                <td className="fw-semibold">#{o.order_number?.slice(0, 8) || o.id?.slice(0, 8)}</td>
+                <td>{o.customer_name}</td>
+                <td>{o.city || '—'}</td>
+                <td>${Number(o.total).toFixed(2)}</td>
+                <td><span className={`ds-badge ${ORDER_CONFIG.badgeMap[o.status] || ''}`}>{ORDER_CONFIG.displayLabels[o.status] || o.status}</span></td>
+                <td style={{ fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{new Date(o.created_at).toLocaleDateString()}</td>
+                <td>
+                  <div className="admin-table-actions justify-content-end">
+                    <Link to={`/admin/orders/${o.id}`} className="btn-pink btn-pink--sm">View</Link>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -27,7 +27,7 @@ export async function fetchMyOrders(userId) {
     .from('orders')
     .select(
       `id, order_number, status, total, created_at,
-       order_items ( id, product_name, color, quantity, price_at_order )`
+       order_items ( id, product_id, product_name, color, quantity, price_at_order )`
     )
     .eq('user_id', userId)
     .order('created_at', { ascending: false });

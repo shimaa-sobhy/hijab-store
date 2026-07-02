@@ -10,28 +10,31 @@ const links = [
   { to: '/admin/settings', label: 'Settings', icon: 'fa-gear' },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ open, onNavClick, onClose }) {
   const { signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await signOut();
-    navigate('/admin/login');
+    navigate('/');
   };
 
   return (
-    <aside className="admin-sidebar">
-      <Link to="/admin" className="admin-sidebar__brand">VEIL <span style={{ color: 'var(--pink)' }}>LUXE</span></Link>
+    <aside className={`admin-sidebar${open ? ' is-open' : ''}`}>
+      <button className="admin-sidebar__close" onClick={onClose} aria-label="Close sidebar">
+        <i className="fas fa-times"></i>
+      </button>
+      <Link to="/admin" className="admin-sidebar__brand" onClick={onNavClick}>VEIL <span style={{ color: 'var(--pink)' }}>LUXE</span></Link>
       <nav className="admin-sidebar__nav">
         {links.map((l) => (
-          <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => `admin-sidebar__link ${isActive ? 'is-active' : ''}`}>
+          <NavLink key={l.to} to={l.to} end={l.end} onClick={onNavClick} className={({ isActive }) => `admin-sidebar__link ${isActive ? 'is-active' : ''}`}>
             <i className={`fas ${l.icon}`}></i>
             <span>{l.label}</span>
           </NavLink>
         ))}
       </nav>
       <div style={{ padding: 'var(--space-4)', marginTop: 'auto', borderTop: '1px solid var(--border-subtle)' }}>
-        <button onClick={handleLogout} className="admin-sidebar__link" style={{ width: '100%', border: 'none', cursor: 'pointer' }}>
+        <button onClick={() => { handleLogout(); if (onNavClick) onNavClick(); }} className="admin-sidebar__link" style={{ width: '100%', border: 'none', cursor: 'pointer' }}>
           <i className="fas fa-right-from-bracket"></i>
           <span>Sign Out</span>
         </button>

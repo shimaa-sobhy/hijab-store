@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatPrice } from '../../utils/formatPrice.js';
 import { useCart } from '../../hooks/useCart.js';
-import { toast } from 'react-toastify';
+import { toast } from '../../utils/toast.jsx';
 
 export default function ProductCard({ product }) {
   const { addItem } = useCart();
@@ -18,12 +18,12 @@ export default function ProductCard({ product }) {
     e.preventDefault();
     e.stopPropagation();
     if (!inStock) {
-      toast.error('This product is out of stock');
+      toast.error('This product is out of stock', 'Out of Stock');
       return;
     }
     const variant = variants[0];
     if (!variant) {
-      toast.error('No variant available');
+      toast.error('No variant available', 'Unavailable');
       return;
     }
     setAdding(true);
@@ -63,7 +63,7 @@ export default function ProductCard({ product }) {
             <span className="product-card__price">{formatPrice(product.price)}</span>
             <button
               className={`btn-pink btn-pink--sm ${adding ? 'disabled' : ''}`}
-              style={{ padding: '7px 16px', fontSize: '0.7rem', pointerEvents: 'auto', minWidth: '34px', minHeight: '34px' }}
+              style={{ padding: '11px 16px', fontSize: '0.72rem', pointerEvents: 'auto', minWidth: '44px', minHeight: '44px' }}
               onClick={handleQuickAdd}
               disabled={!inStock}
             >

@@ -27,7 +27,7 @@ export default function ProductFormPage() {
 
   return (
     <div>
-      <h1 className="fw-bold mb-4" style={{ color: 'var(--text-primary)', fontSize: 'var(--fs-h2)' }}>{id ? 'Edit Product' : 'Add Product'}</h1>
+      <h1 className="fw-bold mb-4 admin-heading" style={{ color: 'var(--text-primary)' }}>{id ? 'Edit Product' : 'Add Product'}</h1>
       <ProductFormComponent initialProduct={product} onSaved={handleSaved} />
     </div>
   );
